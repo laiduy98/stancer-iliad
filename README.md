@@ -15,13 +15,21 @@ DSP2_PASSWORD=111111
 
 ## Launch the lib
 
+uv is required to run the code below. You can install it by this line
+
+```
+pip install uv
+```
+
+Run the code directly
+
 ```bash
 uv run python -m run tests.test_client
 ```
 
 ## Build
 
-You can build it as a distribution
+You can build it as a distribution and install in your own environment.
 
 ```bash
 python -m build
@@ -29,7 +37,7 @@ python -m build
 
 # Note
 
-- I use ```black``` to format the project and linter check.
+- I use ```black``` to format the project.
 
 - This project use ```sync``` over httpx.
 
