@@ -3,7 +3,7 @@
 
 **Important** before run the project.
 
-Create a ```.env``` file like so and place it in the root
+Create a ```.env``` file like so and place it in the root (because the .env is in .gitignore)
 
 ```
 API_BASE_URL=https://dsp2-technical-test.iliad78.net
