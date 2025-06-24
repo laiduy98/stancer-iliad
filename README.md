@@ -19,9 +19,17 @@ DSP2_PASSWORD=111111
 uv run python -m run tests.test_client
 ```
 
+## Build
+
+You can build it as a distribution
+
+```bash
+python -m build
+```
+
 # Note
 
-- I use black to format the project and linter check.
+- I use ```black``` to format the project and linter check.
 
 - This project use ```sync``` over httpx.
 

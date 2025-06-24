@@ -1,36 +1,41 @@
+import logging
 from stancer_client.client import StancerClient
 from stancer_client.exceptions import AuthenticationError, APIRequestError
 from stancer_client.config import settings
+
+# Set up logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def main():
     client = StancerClient(settings.dsp2_username, settings.dsp2_password)
     try:
-        print("Identity.............................")
+        logger.info("Identity.............................")
         identity = client.get_identity()
-        print(identity)
+        logger.info(identity)
 
-        print("\nAccounts...........................")
+        logger.info("Accounts...........................")
         accounts = client.get_accounts()
         for acc in accounts:
-            print("\nAccount........................", acc)
+            logger.info("Account........................ %s", acc)
 
-            print("\nBalances........................")
+            logger.info("Balances........................")
             balances = client.get_balances(acc.id)
             for bal in balances:
-                print("\nBalance.....................", bal)
+                logger.info("Balance..................... %s", bal)
 
-            print("\nTransactions.....................")
+            logger.info("Transactions.....................")
             transactions = client.get_transactions(acc.id, page=1, count=10)
             for tran in transactions:
-                print("\nTransaction.................", tran)
+                logger.info("Transaction................. %s", tran)
 
     except AuthenticationError as e:
-        print("Authentication failed:", e)
+        logger.error("Authentication failed: %s", e)
     except APIRequestError as e:
-        print("API request failed:", e)
+        logger.error("API request failed: %s", e)
     except Exception as e:
-        print("Unexpected error:", e)
+        logger.error("Unexpected error: %s", e)
 
 
 if __name__ == "__main__":

@@ -23,20 +23,18 @@ class StancerClient:
             response = self.client.post("/oauth/token", data=data)
             response.raise_for_status()
         except httpx.HTTPStatusError as e:
-            raise AuthenticationError(
-                f"Authentication failed: {e.response.text}"
-            ) from e
+            raise AuthenticationError(f"Auth fail: {e.response.text}") from e
         except httpx.RequestError as e:
-            raise AuthenticationError(f"Authentication request error: {str(e)}") from e
+            raise AuthenticationError(f"Auth request error: {str(e)}") from e
 
         self.token = Token(**response.json())
         self.client.headers["Authorization"] = f"Bearer {self.token.access_token}"
 
-    def _request(self, method: str, url: str, **kwargs):
+    def _get_request(self, url: str, **kwargs):
         if not self.token:
             self.authenticate()
         try:
-            response = self.client.request(method, url, **kwargs)
+            response = self.client.get(url, **kwargs)
             response.raise_for_status()
             return response.json()
         except httpx.HTTPStatusError as e:
@@ -45,26 +43,25 @@ class StancerClient:
             raise APIRequestError(f"Request error: {str(e)}") from e
 
     def get_identity(self) -> UserIdentity:
-        data = self._request("GET", "/stet/identity")
+        data = self._get_request("/stet/identity")
         return UserIdentity(**data)
 
     def get_accounts(self) -> List[Account]:
-        data = self._request("GET", "/stet/account")
+        data = self._get_request("/stet/account")
         return [Account(**acc) for acc in data]
 
     def get_account(self, account_id: str) -> Account:
-        data = self._request("GET", f"/stet/account/{account_id}")
+        data = self._get_request(f"/stet/account/{account_id}")
         return Account(**data)
 
     def get_balances(self, account_id: str) -> List[Balance]:
-        data = self._request("GET", f"/stet/account/{account_id}/balance")
+        data = self._get_request(f"/stet/account/{account_id}/balance")
         return [Balance(**bal) for bal in data]
 
     def get_transactions(
         self, account_id: str, page: int = 1, count: int = 10
     ) -> List[Transaction]:
-        data = self._request(
-            "GET",
+        data = self._get_request(
             f"/stet/account/{account_id}/transaction",
             params={"page": page, "count": count},
         )
