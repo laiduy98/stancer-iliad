@@ -31,11 +31,11 @@ def main():
                 logger.info("Transaction................. %s", tran)
 
     except AuthenticationError as e:
-        logger.error("Authentication failed: %s", e)
+        logger.error("Authentication failed: %s", str(e))
     except APIRequestError as e:
-        logger.error("API request failed: %s", e)
+        logger.error("API request failed: %s", str(e))
     except Exception as e:
-        logger.error("Unexpected error: %s", e)
+        logger.error("Unexpected error: %s", str(e))
 
 
 if __name__ == "__main__":
