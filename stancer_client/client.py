@@ -6,6 +6,10 @@ from .config import settings
 
 
 class StancerClient:
+    """
+    Client for interacting with the Stancer API.
+    """
+
     def __init__(self, username: str, password: str):
         self.username = username
         self.password = password
