@@ -21,7 +21,7 @@ def main():
                 print("\nBalance.....................", bal)
 
             print("\nTransactions.....................")
-            transactions = client.get_transactions(acc.id, page=1, count=5)
+            transactions = client.get_transactions(acc.id, page=1, count=10)
             for tran in transactions:
                 print("\nTransaction.................", tran)
 
