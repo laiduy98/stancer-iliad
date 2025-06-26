@@ -2,10 +2,7 @@ name: Stancer Release
 
 on:
   push:
-    tags:
-      - '*'
-    branches: [master]
-
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,12 +14,12 @@ jobs:
       - name: Install uv 
         uses: astral-sh/setup-uv@v5
         with:
-            version: "0.7.14"
+          version: "0.7.14"
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-            python-version-file: ".python-version"
+          python-version-file: ".python-version"
 
       - name: Install dependencies
         run: uv sync
@@ -30,7 +27,32 @@ jobs:
       - name: Build the project
         run: uv build
 
-      - name: Upload package to GitHub Release
+      - name: Find the built package and extract version
+        id: find_dist
+        run: |
+          PKG_FILE=$(ls dist/*.tar.gz dist/*.whl | head -n 1)
+          VERSION=$(grep '^version' pyproject.toml | head -n 1 | cut -d'=' -f2 | tr -d ' "')
+          TAG_NAME="v$VERSION"
+          echo "PKG_FILE=$PKG_FILE" >> $GITHUB_ENV
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+      - name: Create a Git tag (if it doesn't exist)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag ${{ env.TAG_NAME }} || echo "Tag already exists"
+          git push origin ${{ env.TAG_NAME }} || echo "Tag already pushed"
+
+      - name: Upload package as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stancer-package
+          path: ${{ env.PKG_FILE }}
+
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/* 
+          files: ${{ env.PKG_FILE }}
+          tag_name: ${{ env.TAG_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
