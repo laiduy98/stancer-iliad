@@ -37,6 +37,7 @@ def main():
         logger.error("API request failed: %s", str(e))
     except Exception as e:
         logger.error("Unexpected error: %s", str(e))
+        
 
 if __name__ == "__main__":
     main()
