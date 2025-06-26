@@ -3,8 +3,6 @@ name: Stancer Release
 on:
   push:
     branches: [master]
-    tags:
-      - '*'
   workflow_dispatch:
 
 jobs:
@@ -58,4 +56,4 @@ jobs:
           files: ${{ env.PKG_FILE }}
           tag_name: ${{ env.TAG_NAME }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} 
