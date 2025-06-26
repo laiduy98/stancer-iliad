@@ -14,9 +14,11 @@ def main():
         logger.info("Identity.............................")
         identity = client.get_identity()
         logger.info(identity)
+        logger.info(type(identity))
 
         logger.info("Accounts...........................")
         accounts = client.get_accounts()
+        logger.info(accounts)
         for acc in accounts:
             logger.info("Account........................ %s", acc)
 
@@ -37,6 +39,10 @@ def main():
     except Exception as e:
         logger.error("Unexpected error: %s", str(e))
 
+def test_client():
+    test_client = StancerClient(settings.dsp2_username, settings.dsp2_password)
+    identity = test_client.get_identity()
+    print(type(identity.first_name))
 
 if __name__ == "__main__":
     main()
