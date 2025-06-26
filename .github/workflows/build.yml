@@ -2,8 +2,7 @@ name: Stancer Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches: [master]
 
 jobs:
   build:
